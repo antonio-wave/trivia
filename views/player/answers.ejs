@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Player</title>
+  </head>
+  <body>
+    <h1>Player</h1>
+    <p>Welcome <b><%= player.name %></b>!</p>
+    <p>Thanks for playing!</p>
+    <p>Here are the scores:</p>
+    <ul>
+      <% for (let i = 0; i < scores.length; i++) { %>
+      <li><%= scores[i].name %>: <%= scores[i].score %></li>
+      <% } %>
+    </ul>
+    <p>Here are the answers:</p>
+    <ul>
+      <% for (let i = 0; i < game.length; i++) { %>
+      <li>
+        <%= game[i].question %>:
+        <ul>
+          <% for (let j = 0; j < game[i].answers.length; j++) { %>
+          <li>
+            <%= game[i].answers[j].option %> - <% for(let k = 0; k <
+            game[i].answers[j].players.length; k++) { %><span
+              ><%=game[i].answers[j].players[k].name %> </span
+            ><%} %> <% if (game[i].answers[j].correct) {%>- correct!<%}%>
+          </li>
+          <% } %>
+        </ul>
+        <% } %>
+      </li>
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Player</title>
+    <script>
+      const TIME = 20;
+
+      const eventSource = new EventSource("/api/events");
+      eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === "start") {
+          document.getElementById("please-wait").style.display = "none";
+          document.getElementById("questions").innerHTML = `
+                    <p>Answer the following questions:</p>
+                    <form action="/api/player/answer" method="post">
+                        ${data.game
+                          .map(
+                            ({ question, image, options }, i) => `
+                            <div id="question-${i}" style="display:${
+                              i === 0 ? "block" : "none"
+                            };">
+                                <p>${question}</p>
+                                ${
+                                  image
+                                    ? `<img src="${image}" style="max-height:40vh;display:block;margin-bottom:1rem;" />`
+                                    : ""
+                                }
+                                ${options
+                                  .map(
+                                    (option, j) => `
+                                    <label style="display:block"><input type="radio" name="${i}" value="${j}" />
+                                    ${option}</label>
+                                `
+                                  )
+                                  .join("")}
+                            </div>`
+                          )
+                          .join("")}
+                    </form>
+                `;
+
+          let time = TIME;
+          setInterval(() => {
+            time--;
+            document.getElementById("clock").innerText =
+              Array(time).fill("-").join("") + " " + time;
+          }, 1000);
+          let questionIndex = 0;
+          setInterval(() => {
+            time = TIME;
+            document.getElementById("clock").innerText =
+              Array(time).fill("-").join("") + " " + time;
+
+            const currentQuestion = document.querySelector(
+              `#question-${questionIndex}`
+            );
+            questionIndex++;
+            const nextQuestion = document.querySelector(
+              `#question-${questionIndex}`
+            );
+            if (nextQuestion) {
+              currentQuestion.style.display = "none";
+              nextQuestion.style.display = "block";
+            } else {
+              document.querySelector("form").submit();
+            }
+          }, TIME * 1000);
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Player</h1>
+    <p>Welcome <b><%= player.name %></b>!</p>
+    <p id="please-wait">Please wait while the game is starting ...</p>
+    <div id="clock"></div>
+    <div id="questions"></div>
+  </body>
+</html>
