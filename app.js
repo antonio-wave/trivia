@@ -51,8 +51,9 @@ app.get("/player/answers", (req, res) => {
     scores: Object.values(players)
       .map(({ name, score }) => ({ name, score }))
       .sort((a, b) => b.score - a.score),
-    game: game.map(({ question, options, answer }, i) => ({
+    game: game.map(({ question, image, options, answer }, i) => ({
       question,
+      image,
       answers: options.map((option, j) => ({
         option,
         correct: j == answer,

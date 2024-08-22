@@ -17,7 +17,14 @@
     <ul>
       <% for (let i = 0; i < game.length; i++) { %>
       <li>
-        <%= game[i].question %>:
+        <span><%= game[i].question %>:</span>
+        <% if (game[i].image) {%>
+        <img
+          src="<%= game[i].image %>"
+          alt="<%= game[i].question %>"
+          style="max-height: 40vh; display: block; margin-bottom: 1rem"
+        />
+        <% } %>
         <ul>
           <% for (let j = 0; j < game[i].answers.length; j++) { %>
           <li>
